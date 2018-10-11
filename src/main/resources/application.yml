@@ -1,0 +1,4 @@
+maxCost: 5
+colony:
+  row: 5
+  col: 3
