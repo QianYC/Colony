@@ -24,10 +24,6 @@ public class CommandServiceImpl implements CommandService {
     private LinkedList<Command>[] cmdQueues;
     private Logger logger = LoggerFactory.getLogger(getClass());
 
-//    public CommandServiceImpl(){
-//        logger.info("maxCost = {}", queueNum);
-//    }
-
     @PostConstruct
     public void init() {
         logger.info("initializing command queues, num = {}", queueNum);
