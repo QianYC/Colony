@@ -2,9 +2,11 @@ package com.colony.server.util;
 
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import net.sf.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cache.annotation.CachePut;
 import org.springframework.stereotype.Component;
 import javax.servlet.http.HttpServletRequest;
 import java.net.InetAddress;
@@ -16,11 +18,11 @@ import java.util.Map;
 @Component
 public class Util {
 
-    @Value("")
+    @Value("${token_prefix}")
     String token_prefix;
-    @Value("")
+    @Value("${secret}")
     String token_secret;
-    @Value("")
+    @Value("${expiration_time}")
     long expiration_time;
 
     private final Logger logger = LoggerFactory.getLogger(Util.class);
@@ -63,9 +65,11 @@ public class Util {
         return ip;
     }
 
-    public String generateToken(String ip) {
+    @CachePut(value = "ipList", key = "#ip")
+    public String generateToken(String ip, JSONObject object) {
         HashMap<String, Object> map = new HashMap<>();
         map.put("ip", ip);
+        map.put("payload", object);
 
         String jwt = token_prefix + Jwts.builder()
                 .setClaims(map)
